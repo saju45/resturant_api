@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
+import categoryRouter from './routes/categoryRoute.js';
+import resturantRouter from './routes/resturantRoute.js';
 import userRouter from './routes/userRoute.js';
 
 dotenv.config();
@@ -23,7 +25,9 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-app.use('/api/users',userRouter)
+app.use('/api/users',userRouter);
+app.use('/api/v1/resturants',resturantRouter);
+app.use('/api/v1/category',categoryRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
