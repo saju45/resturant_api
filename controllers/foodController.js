@@ -1,4 +1,5 @@
 import Food from "../models/foodModel.js";
+import Order from "../models/orderModel.js";
 
 
 // export const createFood=async(req,res)=>{
@@ -261,4 +262,65 @@ export const deleteFood=async(req,res)=>{
             error:error.message
         });
     }
+}
+
+
+//place order
+export const placeOrder=async(req,res)=>{
+    try {
+        const {cart}=req.body;
+        const total=cart.reduce((acc,item)=>acc+item.price*item.quantity,0);
+        if(!cart || cart.length===0){
+            return res.status(400).json({
+                message:"Cart is empty"
+            });
+        }
+        
+        const order=await Order.create({
+            buyer:req.body.id,   
+            foods:cart,
+            payment:total,
+        });
+
+        await order.save();
+        res.status(201).json({
+            success:true,
+            message:"Order placed successfully",
+            order
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            message:"There was an error in server side",
+            error:error.message
+        });
+    }
+}
+
+
+export const orderStatus=async(req,res)=>{
+    try {
+        const {id}=req.params;
+        const {status}=req.body;
+
+        const order=await Order.findById(id);
+        if(!order){
+            return res.status(404).json({
+                message:"Order not found"
+            });
+        }   
+        order.status=status;
+        await order.save(); 
+        res.status(200).json({
+            success:true,
+            message:"Order status updated successfully",
+            order
+        });
+    }
+        catch (error) {
+            res.status(500).json({
+                message:"There was an error in server side",
+                error:error.message
+            });
+        }
 }

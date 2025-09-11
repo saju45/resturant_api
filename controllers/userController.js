@@ -5,7 +5,7 @@ import User from "../models/userModel.js";
 export const createUser=async(req,res)=>{
     try {
 
-        const {username,email,password,phone,address,answer}=req.body;
+        const {username,email,password,phone,address,answer,userType}=req.body;
 
         if(!username || !email || !password || !phone || !answer){
             return res.status(400).json({
@@ -30,7 +30,8 @@ export const createUser=async(req,res)=>{
             password:hashedPassword,
             phone,
             address,
-            answer
+            answer,
+            userType
         });
 
     
